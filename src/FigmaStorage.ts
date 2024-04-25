@@ -1,5 +1,6 @@
 export enum StorageKey {
   APIkey = "APIkey",
+  language = "language",
 }
 
 export class FigmaStorage {

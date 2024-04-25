@@ -1,35 +1,69 @@
-<input type="password" name="APIkey" id="APIkey">
-<p id="origin">
+<!DOCTYPE html>
+<html lang="en">
 
-</p>
-<p id="translator">
-
-</p>
-<script>
-
-  window.addEventListener('message', event => {
-    const message = event.data;
-    console.log('Received message:', message);
-    if (message.pluginMessage.type === "translate") {
-      const origin = document.getElementById('origin');
-      const translator = document.getElementById('translator');
-      origin.innerText = message.pluginMessage.payload.data.characters
-      translator.innerText = message.pluginMessage.payload.value
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma translate</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 12px;
     }
-  });
 
-  const APIkeyInput = document.getElementById('APIkey')
-  APIkeyInput.onchange = function (event) {
-    const value = event.target.value;
-    console.log('Input value changed:', value);
+    p {
+      margin: 0;
+      padding: 5px 0;
 
-    parent.postMessage({
-      pluginMessage: {
-        type: 'APIkey', payload: {
-          value
-        }
+    }
+
+    #origin {
+      color: #b44646;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <label for="APIkey">Open AI key:</label>
+    <input type="password" name="APIkey" id="APIkey">
+  </div>
+  <p id="origin"></p>
+  <hr>
+  <p id="translator"></p>
+  <script>
+    const APIkeyInput = document.getElementById('APIkey')
+
+    window.addEventListener('message', event => {
+      const message = event.data;
+      console.log('Received message:', message);
+      if (message.pluginMessage.type === "translate") {
+        const origin = document.getElementById('origin');
+        const translator = document.getElementById('translator');
+        origin.innerText = message.pluginMessage.payload.data.characters
+        translator.innerText = message.pluginMessage.payload.value
       }
-    }, '*')
-  };
 
-</script>
+      if (message.pluginMessage.type === "APIkey") {
+        APIkeyInput.value = message.pluginMessage.payload.value
+      }
+    });
+
+
+    APIkeyInput.onchange = function (event) {
+      const value = event.target.value;
+      console.log('Input value changed:', value);
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'APIkey', payload: {
+            value
+          }
+        }
+      }, '*')
+    };
+
+  </script>
+</body>
+
+</html>
