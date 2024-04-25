@@ -1,0 +1,35 @@
+<input type="password" name="APIkey" id="APIkey">
+<p id="origin">
+
+</p>
+<p id="translator">
+
+</p>
+<script>
+
+  window.addEventListener('message', event => {
+    const message = event.data;
+    console.log('Received message:', message);
+    if (message.pluginMessage.type === "translate") {
+      const origin = document.getElementById('origin');
+      const translator = document.getElementById('translator');
+      origin.innerText = message.pluginMessage.payload.data.characters
+      translator.innerText = message.pluginMessage.payload.value
+    }
+  });
+
+  const APIkeyInput = document.getElementById('APIkey')
+  APIkeyInput.onchange = function (event) {
+    const value = event.target.value;
+    console.log('Input value changed:', value);
+
+    parent.postMessage({
+      pluginMessage: {
+        type: 'APIkey', payload: {
+          value
+        }
+      }
+    }, '*')
+  };
+
+</script>
